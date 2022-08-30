@@ -1,0 +1,45 @@
+<span class="label">{{ client_count }}</span>
+<div class="row">
+    {% block client_item_data %}
+        {% block client_item_desc %}
+            <div class="col-md-2">
+                <div class="text-center">
+                    {{ client.client_name }}<br/><br/>
+                    <img style="max-width: 100px; max-height: 100px" src="{{ request.route_url('oauth2_get_client_logo',clientid=client.client_id) }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="text-center">
+                    {{ client.client_id }}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="text-center">
+                    {{ client.client_secret }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    {%- for key in client.client_metadata %}
+                        <strong>{{ key }}: </strong>{{ client.client_metadata[key] }}<br/>
+                    {%- endfor %}
+                    <strong>formshare_login_url: </strong>{{ request.route_url('oauth2_client_login',clientid=client.client_id) }}<br/>
+                    <strong>formshare_authorize_url: </strong>{{ request.route_url('oauth2_authorize') }}<br/>
+                    <strong>formshare_token_url: </strong>{{ request.route_url('oauth2_token') }}<br/>
+                    <strong>formshare_revoke_url: </strong>{{ request.route_url('oauth2_revoke') }}<br/>
+                    <strong>formshare_profile_url: </strong>{{ request.route_url('oauth2_profile') }}<br/>
+                </div>
+            </div>
+        {% endblock client_item_desc %}
+
+        {% block client_item_actions %}
+            <div class="col-md-2">
+                <div class="text-center">
+                    <a href="{{ request.route_url('oauth2_edit_client',clientid=client.client_id) }}" class="btn btn-white btn-sm action-buttons"><i class="fas fa-pencil-alt text-warning"></i> {{ _('Update logo') }} </a>
+                    <a urn="{{ request.route_url('oauth2_delete_client',clientid=client.client_id) }}" class="btn btn-white btn-sm remove_client action-buttons"><i class="fas fa-trash text-danger"></i> {{ _('Delete') }} </a>
+                </div>
+            </div>
+        {% endblock client_item_actions %}
+    {% endblock client_item_data %}
+</div>
+<hr>

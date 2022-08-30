@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% block loginmeta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{{ request.url_for_static('landing/icon.png') }}">
+    {% endblock loginmeta %}
+    {% block logintitle %}
+        <title>{{ _("ClimMob | Login") }}</title>
+    {% endblock logintitle %}
+
+    {% block css %}
+        {% cssresource request,'coreresources','style' %}
+    {% endblock css %}
+
+    {% block topScripts %}
+        {% jsresource request,'coreresources','landing' %}
+    {% endblock topScripts %}
+</head>
+
+<body class="gray-bg">
+{% block loginbody %}
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                {% block loginlogo %}
+{#                    <h1 class="logo-name">CM</h1>#}
+                    <img src="{{ request.url_for_static('landing/climmob2.png') }}" alt="logo" width="100px"/>&nbsp;&nbsp;&nbsp;+ <img style="max-width: 100px; max-height: 100px" src="{{ request.route_url('oauth2_get_client_logo',clientid=clientid) }}" width="52px">
+                    <br><br>
+                {% endblock loginlogo %}
+
+            </div>
+            {% block loginwelcome %}
+{#                <h3>{{ _("Welcome ClimMob") }}</h3>#}
+            {% endblock loginwelcome %}
+            {#
+            <p>Perfectly designed and precisely prepared admin theme with over 50 pages with extra new web app views.
+                <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+            </p>#}
+            {% block logincontent %}
+                <p>{{ _("Login into ClimMob continue to") }} {{ clientname }}</p>
+                {% block loginerror %}
+                    {% if failed_attempt %}
+                        <div class="alert alert-danger alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ _("Login failed. Please check your credentials and try again") }}
+                        </div>
+                    {% endif %}
+                {% endblock loginerror %}
+                <form class="m-t" role="form" method="post" action="{{ request.path }}">
+                    {% block loginform %}
+                        <div class="form-group">
+                            <input type="text" name="login" class="form-control" placeholder="{{ _("Username") }}" required="">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="passwd" class="form-control" placeholder="{{ _("Password") }}" required="">
+                        </div>
+                        <input type="hidden" name="next" value="{{ next }}">
+                        <button type="submit" name="submit" class="btn btn-primary block full-width m-b">{{ _("Login") }}</button>
+
+                        <a href="{{ request.route_url('recover') }}"><small>{{ _("Forgot username or password?") }}</small></a>
+                    {% endblock loginform %}
+                </form>
+            {% endblock logincontent %}
+            {% block loginfooter %}
+                <br>
+                <strong>{{ _("Copyright") }}</strong> {{ _("2021, Alliance of Bioversity International and CIAT") }}
+            {% endblock loginfooter %}
+        </div>
+    </div>
+
+    {% if ask_for_cookies %}
+        <div class="modal inmodal" id="cookieModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <i class="fa fa-user-secret modal-icon"></i>
+                        <h4 class="modal-title">{{ _('Cookies') }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ _('This website stores cookies on your computer. These cookies are used to remember you or to know that you have been authenticated. To find out more about the cookies we use, see our') }} <a href="{{ request.route_url('privacy') }}">{{ _('Privacy Policy') }}</a>.<br/><br/>
+                        {{ _('If you decline, two encrypted cookies will be stored: 1) a cookie to remember your answer and 2) a cookie for us to know that you are authenticated once you login.') }}
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="{{ request.route_url('store_cookie',_query={'next': request.url}) }}">
+                            <button type="submit" name="accept" class="btn btn-default">{{ _('Accept') }}</button>
+                            <button type="submit" name="decline" class="btn btn-default">{{ _('Decline') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+
+        {% if ask_for_cookies %}
+            $(document).ready(function() {
+                myVar = setTimeout(showCookieFunc, 500);
+                function showCookieFunc() {
+                    $('#cookieModal').modal('show');
+                }
+            });
+        {% endif %}
+
+        {% block loginscript %}
+        {% endblock loginscript %}
+    </script>
+
+{% endblock loginbody %}
+</body>
+
+</html>

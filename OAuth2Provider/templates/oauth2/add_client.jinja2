@@ -1,0 +1,43 @@
+{% extends 'dashboard/dashboard.jinja2' %}
+{% import 'oauth2/macros/form.jinja2' as form %}
+
+{% block title %}
+    <title>{{ _("ClimMob - Add OAuth Client") }}</title>
+{% endblock title %}
+
+{% block topScripts %}
+    {{ super() }}
+    {% jsresource request,'OAuth2Provider','bs-custom-file-input' %}
+{% endblock topScripts %}
+
+
+{% block pageheading %}
+    {% include 'oauth2/snippets/brdcrbs_addclient.jinja2' %}
+{% endblock %}
+
+
+{% block pagecontent %}
+<div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox">
+                <div class="ibox-content">
+                    {% include 'oauth2/snippets/client_form.jinja2' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock pagecontent %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(document).ready(function()
+        {
+            $('.custom-file-input').on('change', function() {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
+        });
+    </script>
+{% endblock scripts %}

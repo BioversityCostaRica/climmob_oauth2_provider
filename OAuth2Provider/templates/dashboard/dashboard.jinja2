@@ -1,0 +1,10 @@
+{% extend_me %}
+
+{% block mainavitems %}
+    {{ super() }}
+    {% if activeUser.login == "bioversity" %}
+        <li {% if sectionActive == "OAuth2Provider" %}class="active" {% endif %}>
+            <a href="{{ request.route_url('oauth2_client_list') }}"><i class="fa fa-exchange"></i> <span class="nav-label">{{ _("OAuth2 Clients") }}</span></a>
+        </li>
+    {% endif %}
+{% endblock mainavitems %}

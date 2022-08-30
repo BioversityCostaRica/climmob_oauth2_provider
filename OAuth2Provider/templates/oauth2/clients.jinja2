@@ -1,0 +1,119 @@
+{% extends 'dashboard/dashboard.jinja2' %}
+{% import 'oauth2/macros/form.jinja2' as form %}
+
+{% block title %}
+    <title>{{ _("ClimMob | OAuth2 Client List") }}</title>
+{% endblock title %}
+
+
+{% block pageheading %}
+    {% include 'oauth2/snippets/brdcrbs_clientlist.jinja2' %}
+{% endblock %}
+
+
+{% block pagecontent %}
+    <div class="row">
+        <div class="col-lg-12">
+            {{ form.display_errors(errors) }}
+            <div class="ibox">
+                <div class="ibox-content">
+                    {% block client_list_heading %}
+                        <div style="margin-top: 10px" class="row">
+                            <div class="col-md-9">
+
+                            </div>
+                            <div class="col-md-3">
+                                <button onclick="location.href='{{ request.route_url('oauth2_add_client',userid=activeUser.login) }}';" class="btn btn-block btn-primary"> <i class="fa fa-plus"></i> {{ _('Add client') }}</button>
+                            </div>
+                        </div>
+                    {% endblock client_list_heading %}
+
+                    {% block client_list_table %}
+                        <div class="clients-list">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% block client_list_table_header %}
+                                        <div class="grid-header">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="text-center">
+                                                        {{ _('Name') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="text-center">
+                                                        {{ _('Client ID') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="text-center">
+                                                        {{ _('Client Secret') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="text-center">
+                                                        {{ _('Metadata') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="text-center">
+                                                        {{ _('Actions') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="hr-line-solid">
+                                        </div>
+                                    {% endblock client_list_table_header %}
+                                    {% block client_list_table_items %}
+                                        {% for client in clients %}
+                                            {% set client_count = loop.index %}
+                                            {% include 'oauth2/snippets/client_item.jinja2' %}
+                                        {% endfor %}
+                                    {% endblock client_list_table_items %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endblock client_list_table %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock pagecontent %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(document).ready(function() {
+            $('.remove_client').click(function () {
+                var action_url = $( this ).attr('urn');
+                swal({
+                        title: "{{ _('Are you sure?') }}",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "{{ _('Yes, remove it!') }}",
+                        cancelButtonText: "{{ _('Oops!, cancel!') }}",
+                        closeOnConfirm: true,
+                        closeOnCancel: true },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            var form = document.createElement('form');
+                            form.setAttribute('method', 'post');
+                            form.setAttribute('action', action_url);
+                            form.style.display = 'hidden';
+
+                            var i = document.createElement("input"); //input element, text
+                            i.setAttribute('type',"text");
+                            i.setAttribute('name',"csrf_token");
+                            i.setAttribute('value','{{ request.session.get_csrf_token() }}');
+                            form.appendChild(i);
+
+                            document.body.appendChild(form);
+                            $("#busy").show();
+                            form.submit();
+                        }
+                    });
+            });
+        });
+    </script>
+{% endblock script %}
