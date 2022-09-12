@@ -313,7 +313,7 @@ class OAuthAuthorizeView(publicView):
         if login_data is not None:
             current_user = getUserData(login_data, self.request)
             if current_user is not None:
-                if self.request.method == "GET":
+                if self.request.method == "GET":  # HAY QUE QUITARLO ? ************
                     authorization = authorization_function(self)
                     config_oauth(self, authorization)
 
@@ -338,11 +338,8 @@ class OauthTokenView(publicView):
         authorization = authorization_function(self)
         config_oauth(self, authorization)
         res = authorization.create_token_response(req=self.request)
-        payload = json.dumps(res["token"])
 
-        self.request.response.text = payload
-        self.request.response.header = res["header"]
-        return self.request.response
+        return res["token"]
 
 
 class OauthRevokeView(publicView):
@@ -357,15 +354,16 @@ class OauthProfileView(publicView):
         bearer = self.request.headers.get("Authorization")
         token = bearer.split("Bearer ")[1]
         user = get_user_by_token(self.request, token)
+
         if user is None:
             raise HTTPNotFound
+
         user_dict = {
+            "sub": user.user_name,
             "id": user.user_name,
             "email": user.user_email,
-            "name": user.user_fullname,
-            "given_name": user.user_name,
         }
 
-        user_json_data = json.dumps(user_dict)
-        self.request.response.text = user_json_data
-        return self.request.response
+        print(user_dict)
+
+        return user_dict

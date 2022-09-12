@@ -69,9 +69,9 @@ class OAuth2Provider(plugins.SingletonPlugin):
             u.addRoute(
                 "oauth2_authorize", "/oauth2/authorize", OAuthAuthorizeView, None
             ),
-            u.addRoute("oauth2_token", "/oauth2/token", OauthTokenView, None),
+            u.addRoute("oauth2_token", "/oauth2/token", OauthTokenView, "json"),
             u.addRoute("oauth2_revoke", "/oauth2/revoke", OauthRevokeView, None),
-            u.addRoute("oauth2_profile", "/oauth2/profile", OauthProfileView, None),
+            u.addRoute("oauth2_profile", "/oauth2/profile", OauthProfileView, "json"),
         ]
 
         return custom_map
