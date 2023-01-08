@@ -362,6 +362,7 @@ class OauthProfileView(publicView):
             "sub": user.user_name,
             "id": user.user_name,
             "email": user.user_email,
+            "fullname": user.user_fullname
         }
 
         print(user_dict)
